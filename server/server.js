@@ -38,6 +38,7 @@ app.use(async (req, res, next) => {
 
 // Routes
 app.use('/api', invitationRoutes);
+app.use('/', invitationRoutes); // Vercel sometimes strips /api from req.url
 
 // Start server locally (Vercel bypasses this)
 if (!process.env.VERCEL) {
