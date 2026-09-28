@@ -45,7 +45,7 @@ router.post('/invitations', async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating invitation:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    res.status(500).json({ success: false, message: error.message || 'Internal server error' });
   }
 });
 
