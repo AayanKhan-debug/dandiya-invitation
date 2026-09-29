@@ -4,7 +4,7 @@ import InvitationCard from './InvitationCard';
 import Celebration from './Celebration';
 import FloatingHearts from './FloatingHearts';
 import invitationConfig from '../config/invitationConfig';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const InvitationExperience = ({ inviteId, targetName, isLoading }) => {
   const [accepted, setAccepted] = useState(false);
