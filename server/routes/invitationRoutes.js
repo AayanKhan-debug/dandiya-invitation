@@ -5,16 +5,20 @@ const webpush = require('web-push');
 const InvitationResponse = require('../models/InvitationResponse');
 const Invitation = require('../models/Invitation');
 
-const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
-const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
-const vapidSubject = process.env.VAPID_SUBJECT || 'mailto:admin@example.com';
+const vapidPublicKey = process.env.VAPID_PUBLIC_KEY ? process.env.VAPID_PUBLIC_KEY.trim() : null;
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY ? process.env.VAPID_PRIVATE_KEY.trim() : null;
+const vapidSubject = process.env.VAPID_SUBJECT ? process.env.VAPID_SUBJECT.trim() : 'mailto:admin@example.com';
 
 if (vapidPublicKey && vapidPrivateKey) {
-  webpush.setVapidDetails(
-    vapidSubject,
-    vapidPublicKey,
-    vapidPrivateKey
-  );
+  try {
+    webpush.setVapidDetails(
+      vapidSubject,
+      vapidPublicKey,
+      vapidPrivateKey
+    );
+  } catch (err) {
+    console.error('Failed to configure Web Push VAPID details on startup. Push notifications will be disabled:', err.message);
+  }
 }
 
 // Health Check
