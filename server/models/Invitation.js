@@ -7,16 +7,20 @@ const invitationSchema = new mongoose.Schema({
     unique: true,
     index: true
   },
+  manageToken: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true
+  },
   targetName: {
     type: String,
     required: true,
     trim: true
   },
-  senderEmail: {
-    type: String,
-    required: true,
-    lowercase: true,
-    trim: true
+  pushSubscription: {
+    type: Object,
+    default: null
   },
   response: {
     type: String,

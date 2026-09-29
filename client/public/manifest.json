@@ -1,0 +1,15 @@
+{
+  "name": "Dandiya Invitation",
+  "short_name": "Dandiya",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0014",
+  "theme_color": "#E85B91",
+  "icons": [
+    {
+      "src": "/icons.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
