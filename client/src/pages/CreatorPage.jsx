@@ -71,9 +71,9 @@ const CreatorPage = () => {
         return;
       }
 
-      const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
+      const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY?.trim();
       if (!vapidPublicKey) {
-         throw new Error('VAPID public key missing');
+         throw new Error('VITE_VAPID_PUBLIC_KEY is missing from environment variables');
       }
       
       const subscription = await registration.pushManager.subscribe({
@@ -92,10 +92,13 @@ const CreatorPage = () => {
       if(data.success) {
          setPushStatus('subscribed');
       } else {
+         console.error('API Error:', data.message);
+         setError(`API Error: ${data.message}`);
          setPushStatus('error');
       }
     } catch (err) {
       console.error('Push error:', err);
+      setError(`Push setup failed: ${err.message}`);
       setPushStatus('error');
     }
   };
@@ -166,7 +169,7 @@ const CreatorPage = () => {
 
                 {pushStatus === 'error' && (
                   <div className="w-full bg-red-500/20 border border-red-500/40 text-red-200 py-3 px-6 rounded-xl text-sm">
-                    Failed to enable notifications. Please use the status link instead.
+                    {error || 'Failed to enable notifications. Please use the status link instead.'}
                   </div>
                 )}
 
