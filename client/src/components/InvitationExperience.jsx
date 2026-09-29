@@ -6,7 +6,7 @@ import FloatingHearts from './FloatingHearts';
 import invitationConfig from '../config/invitationConfig';
 import { AnimatePresence } from 'framer-motion';
 
-const InvitationExperience = ({ inviteId, targetName }) => {
+const InvitationExperience = ({ inviteId, targetName, isLoading }) => {
   const [accepted, setAccepted] = useState(false);
   const [noClickCount, setNoClickCount] = useState(0);
   
@@ -27,12 +27,13 @@ const InvitationExperience = ({ inviteId, targetName }) => {
   }, []);
 
   useEffect(() => {
+    if (isLoading) return;
     // Initial tiny hearts
     const timer = setTimeout(() => {
       triggerHearts(3);
     }, 1000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [isLoading]);
 
   const triggerHearts = (count, isCelebration = false) => {
     if (heartsRef.current) {
@@ -61,7 +62,7 @@ const InvitationExperience = ({ inviteId, targetName }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          inviteId, // Send inviteId if present
+          inviteId,
           response: 'yes',
           noClickCount: noClickCount,
           timestamp: new Date().toISOString()
@@ -72,7 +73,6 @@ const InvitationExperience = ({ inviteId, targetName }) => {
     }
   };
 
-  // Inject targetName into config dynamically
   const mergedConfig = {
     ...invitationConfig,
     herName: targetName || invitationConfig.herName
@@ -83,7 +83,17 @@ const InvitationExperience = ({ inviteId, targetName }) => {
       <FloatingHearts ref={heartsRef} />
       
       <AnimatePresence mode="wait">
-        {!accepted ? (
+        {isLoading ? (
+          <motion.div 
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="text-[#F4C95D] font-serif text-xl animate-pulse"
+          >
+            Loading... ✨
+          </motion.div>
+        ) : !accepted ? (
           <InvitationCard 
             key="invitation"
             onYes={handleYes} 

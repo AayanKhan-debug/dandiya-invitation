@@ -33,7 +33,7 @@ const Celebration = ({ config }) => {
           width={width}
           height={height}
           recycle={recycleConfetti}
-          numberOfPieces={300}
+          numberOfPieces={width < 768 ? 100 : 250}
           gravity={0.15}
           initialVelocityY={20}
           colors={['#F4C95D', '#F26A73', '#E85B91', '#ffffff', '#9333ea']}

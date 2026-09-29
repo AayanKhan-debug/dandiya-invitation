@@ -2,17 +2,16 @@ import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 // Complex Marigold Toran with Mango Leaves
-export const MarigoldToran = ({ className }) => (
+export const MarigoldToran = React.memo(({ className }) => (
   <div className={`absolute top-0 w-full flex justify-between px-2 sm:px-12 pointer-events-none ${className}`}>
     {/* Base horizontal string */}
     <div className="absolute top-2 w-full left-0 h-[2px] bg-yellow-600/50" />
     
     {Array.from({ length: 8 }).map((_, i) => (
-      <motion.div 
+      <div 
         key={`toran-${i}`}
         className="relative flex flex-col items-center mt-[-10px] transform-origin-top"
-        animate={{ rotate: [-2, 2, -2] }}
-        transition={{ duration: 3 + Math.random(), repeat: Infinity, delay: Math.random() * 2 }}
+        style={{ animation: `sway ${3 + Math.random()}s ease-in-out infinite alternate ${Math.random() * 2}s` }}
       >
         {/* Mango Leaves Base */}
         <svg width="60" height="40" viewBox="0 0 60 40" className="absolute -top-1 opacity-90 drop-shadow-md z-0">
@@ -31,17 +30,16 @@ export const MarigoldToran = ({ className }) => (
           {/* Bottom bell/tassel */}
           <div className="w-4 h-5 mt-1 bg-gradient-to-b from-yellow-300 to-yellow-600 rounded-t-full drop-shadow-[0_0_4px_rgba(253,224,71,0.8)]" />
         </div>
-      </motion.div>
+      </div>
     ))}
   </div>
-);
+));
 
 // Warm Lanterns with detailed geometry
-export const Lantern = ({ className, delay = 0 }) => (
-  <motion.div 
+export const Lantern = React.memo(({ className, delay = 0 }) => (
+  <div 
     className={`absolute origin-top pointer-events-none z-10 ${className}`}
-    animate={{ rotate: [-3, 3, -3] }}
-    transition={{ duration: 4.5, repeat: Infinity, delay, ease: "easeInOut" }}
+    style={{ animation: `sway 4.5s ease-in-out infinite alternate ${delay}s` }}
   >
     <div className="relative flex flex-col items-center">
       <div className="w-[1px] h-16 sm:h-24 bg-gradient-to-b from-yellow-600/40 to-[#F4C95D]" />
@@ -66,17 +64,16 @@ export const Lantern = ({ className, delay = 0 }) => (
         <div className="w-[1px] h-6 bg-gradient-to-b from-[#E85B91] to-transparent" />
       </div>
     </div>
-  </motion.div>
-);
+  </div>
+));
 
 // Advanced glowing Diya
-export const Diya = ({ className, delay = 0 }) => (
+export const Diya = React.memo(({ className, delay = 0 }) => (
   <div className={`relative flex flex-col items-center pointer-events-none z-20 ${className}`}>
     {/* Ambient Floor Glow */}
-    <motion.div 
-      animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-      transition={{ duration: 1.5, repeat: Infinity, delay }}
+    <div 
       className="absolute top-4 w-12 h-6 bg-orange-500/40 blur-[10px] rounded-full"
+      style={{ animation: `light-pulse 1.5s infinite alternate ${delay}s` }}
     />
     
     <svg width="45" height="25" viewBox="0 0 45 25" className="relative z-10 drop-shadow-[0_8px_6px_rgba(0,0,0,0.6)]">
@@ -85,56 +82,50 @@ export const Diya = ({ className, delay = 0 }) => (
       <path d="M6 12 C6 15 13 18 22.5 18 C32 18 39 15 39 12 C39 9 32 6 22.5 6 C13 6 6 9 6 12 Z" fill="#521f0a" />
       
       {/* Detailed Flame */}
-      <motion.g
-        animate={{ scaleY: [1, 1.15, 1], rotate: [-3, 3, -3], originY: "12px", originX: "22.5px" }}
-        transition={{ duration: 0.2 + (Math.random()*0.1), repeat: Infinity, delay }}
+      <g
+        style={{ transformOrigin: '22.5px 12px', animation: `sway ${0.2 + (Math.random()*0.1)}s infinite alternate ${delay}s` }}
       >
         <path d="M22.5 12 C22.5 12 18 4 22.5 -2 C27 4 22.5 12 22.5 12 Z" fill="#ff4500" filter="blur(1px)"/>
         <path d="M22.5 12 C22.5 12 20 6 22.5 2 C25 6 22.5 12 22.5 12 Z" fill="#ffb700" />
         <path d="M22.5 12 C22.5 12 21 8 22.5 5 C24 8 22.5 12 22.5 12 Z" fill="#ffffff" />
-      </motion.g>
+      </g>
     </svg>
   </div>
-);
+));
 
 // Complex 6-10 Garba Dancers Crowd (Midground)
-export const GarbaCrowd = () => {
+export const GarbaCrowd = React.memo(({ isMobile }) => {
   // Generate a random crowd layout once
   const crowd = useMemo(() => {
-    return Array.from({ length: 8 }).map((_, i) => {
+    const count = isMobile ? 5 : 8;
+    return Array.from({ length: count }).map((_, i) => {
       const isGirl = Math.random() > 0.5;
       const scale = 0.6 + Math.random() * 0.4;
-      const xPos = -45 + (i * 12) + (Math.random() * 5); // Spread across bottom
+      const xPos = -45 + (i * (isMobile ? 18 : 12)) + (Math.random() * 5); // Spread across bottom
       const zIndex = Math.floor(scale * 10);
       const colorType = Math.random();
       let color = "#3A102F"; // default dark silhouette
       if (colorType > 0.7) color = "#521842"; // purple tint
       else if (colorType > 0.4) color = "#26091F"; // darker
       
-      return { id: i, isGirl, scale, xPos, zIndex, color, delay: Math.random() * 2 };
+      return { id: i, isGirl, scale, xPos, zIndex, color, delay: Math.random() * 2, durX: 4 + Math.random() * 2, durY: 1 + Math.random() };
     });
-  }, []);
+  }, [isMobile]);
 
   return (
     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[300px] flex justify-center items-end opacity-[0.85] pointer-events-none z-10 overflow-hidden">
       {crowd.map((dancer) => (
-        <motion.div
+        <div
           key={dancer.id}
           className="absolute bottom-4 drop-shadow-[0_0_15px_rgba(244,201,93,0.15)]"
           style={{ 
             left: `${50 + dancer.xPos}%`, 
             transform: `scale(${dancer.scale})`, 
-            zIndex: dancer.zIndex 
-          }}
-          animate={{ 
-            x: [-10, 10, -10], 
-            y: [0, -5, 0] 
-          }}
-          transition={{ 
-            x: { duration: 4 + Math.random() * 2, repeat: Infinity, ease: "easeInOut", delay: dancer.delay },
-            y: { duration: 1 + Math.random(), repeat: Infinity, ease: "easeInOut", delay: dancer.delay }
+            zIndex: dancer.zIndex,
+            animation: `crowd-sway-x ${dancer.durX}s ease-in-out infinite alternate ${dancer.delay}s`
           }}
         >
+          <div style={{ animation: `crowd-sway-y ${dancer.durY}s ease-in-out infinite alternate ${dancer.delay}s` }}>
           {dancer.isGirl ? (
             <svg width="100" height="150" viewBox="0 0 100 150">
               <defs>
@@ -173,22 +164,21 @@ export const GarbaCrowd = () => {
               </motion.g>
             </svg>
           )}
-        </motion.div>
+          </div>
+        </div>
       ))}
     </div>
   );
-};
+});
 
 // Cinematic glowing floor Rangoli
-export const CinematicRangoli = () => (
+export const CinematicRangoli = React.memo(() => (
   <div className="absolute bottom-[-150px] left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none z-0">
     <div className="absolute inset-0 bg-gradient-to-t from-[rgba(244,201,93,0.15)] to-transparent blur-[50px] rounded-full" />
-    <motion.svg 
+    <svg 
       viewBox="0 0 400 200" 
       className="w-full h-full opacity-30 drop-shadow-[0_0_15px_rgba(244,201,93,0.4)]"
-      style={{ transform: 'perspective(600px) rotateX(60deg)' }}
-      animate={{ rotateZ: 360 }}
-      transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
+      style={{ animation: 'rotate-rangoli 200s linear infinite' }}
     >
       <circle cx="200" cy="100" r="90" fill="none" stroke="#F4C95D" strokeWidth="2" strokeDasharray="5,5" />
       <circle cx="200" cy="100" r="70" fill="none" stroke="#E85B91" strokeWidth="4" />
@@ -200,12 +190,12 @@ export const CinematicRangoli = () => (
           <circle cx="200" cy="15" r="4" fill="#F4C95D" />
         </g>
       ))}
-    </motion.svg>
+    </svg>
   </div>
-);
+));
 
 // Decorative Corner Foliage
-export const CornerFoliage = ({ side = "left" }) => (
+export const CornerFoliage = React.memo(({ side = "left" }) => (
   <div className={`absolute bottom-0 ${side === "left" ? "left-0" : "right-0"} w-32 sm:w-64 h-64 pointer-events-none z-20 overflow-hidden opacity-80`}>
     <svg viewBox="0 0 100 100" className="w-full h-full" style={{ transform: side === "right" ? "scaleX(-1)" : "none" }}>
       <path d="M-10 110 Q40 100 60 40 Q40 80 -10 90" fill="#2d5a27" />
@@ -223,43 +213,43 @@ export const CornerFoliage = ({ side = "left" }) => (
       </defs>
     </svg>
   </div>
-);
+));
 
 // Floating Petals
-export const FloatingPetals = () => {
-  const petals = useMemo(() => Array.from({ length: 20 }).map((_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    delay: Math.random() * 10,
-    duration: 10 + Math.random() * 10,
-    color: ['#F26A73', '#E85B91', '#F4C95D', '#ea580c'][Math.floor(Math.random() * 4)],
-    scale: 0.3 + Math.random() * 0.4
-  })), []);
+export const FloatingPetals = React.memo(({ isMobile }) => {
+  const petals = useMemo(() => {
+    const count = isMobile ? 10 : 20;
+    return Array.from({ length: count }).map((_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      delay: Math.random() * 10,
+      duration: 10 + Math.random() * 10,
+      color: ['#F26A73', '#E85B91', '#F4C95D', '#ea580c'][Math.floor(Math.random() * 4)],
+      scale: 0.3 + Math.random() * 0.4
+    }));
+  }, [isMobile]);
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
       {petals.map(p => (
-        <motion.div
+        <div
           key={p.id}
-          className="absolute top-[-20px]"
-          style={{ left: `${p.x}vw`, width: 20, height: 20 }}
-          animate={{
-            y: ['0vh', '100vh'],
-            x: ['0vw', `${(Math.random() - 0.5) * 20}vw`],
-            rotateX: [0, 360],
-            rotateY: [0, 360],
-            rotateZ: [0, 360]
+          className="absolute top-0"
+          style={{ 
+            left: `${p.x}vw`, 
+            width: 20, 
+            height: 20,
+            animation: `petal-fall ${p.duration}s linear infinite ${p.delay}s`
           }}
-          transition={{ duration: p.duration, repeat: Infinity, delay: p.delay, ease: "linear" }}
         >
           <svg viewBox="0 0 10 10" style={{ transform: `scale(${p.scale})` }}>
             <path d="M5 0 C8 3, 10 7, 5 10 C0 7, 2 3, 5 0 Z" fill={p.color} opacity="0.7" />
           </svg>
-        </motion.div>
+        </div>
       ))}
     </div>
   );
-};
+});
 
 // Centerpiece Dancers for card (unchanged structurally, just ensuring exports)
 export const CardDancers = () => (

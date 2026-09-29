@@ -33,11 +33,7 @@ const InvitationView = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full bg-[#160714] flex items-center justify-center">
-        <div className="text-[#F4C95D] font-serif text-xl animate-pulse">
-          Loading... ✨
-        </div>
-      </div>
+      <InvitationExperience inviteId={null} targetName={null} isLoading={true} />
     );
   }
 
@@ -54,7 +50,7 @@ const InvitationView = () => {
     );
   }
 
-  return <InvitationExperience inviteId={inviteId} targetName={targetName} />;
+  return <InvitationExperience inviteId={inviteId} targetName={targetName} isLoading={false} />;
 };
 
 export default InvitationView;
